@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">fontwriter</string>
+    <string name="todo">TODO</string>
+    <string name="file_provider_authority">fontwriter.fileprovider</string>
+</resources>
