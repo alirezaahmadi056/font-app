@@ -20,10 +20,16 @@ class LoginActivity : AppCompatActivity() , Controller{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(view.binding.root)
-        presenter.onCreate(this)
+        presenter.onCreate()
     }
 
     override fun changeFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().replace(R.id.fragment,fragment).commit()
+    }
+
+
+    override fun startActivityFromController(context: Context?, intent: Intent) {
+        finish()
+        startActivity(intent)
     }
 }

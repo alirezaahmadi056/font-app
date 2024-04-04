@@ -1,7 +1,5 @@
 package info.ahmadi.fontwriter
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,16 +7,18 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import dagger.hilt.android.AndroidEntryPoint
 import info.ahmadi.fontwriter.controller.Controller
-import info.ahmadi.fontwriter.presenter.PresenterLoginTwoFragment
-import info.ahmadi.fontwriter.view.ViewLoginTwoFragment
+import info.ahmadi.fontwriter.presenter.PresenterFreeAssetsFragment
+import info.ahmadi.fontwriter.presenter.PresenterGoldAssetsFragment
+import info.ahmadi.fontwriter.view.ViewFreeAssetsFragment
+import info.ahmadi.fontwriter.view.ViewGoldAssetsFragment
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginTwoFragment : Fragment() {
+class FreeAssetsFragment : Fragment()  {
     @Inject
-    lateinit var view: ViewLoginTwoFragment
+    lateinit var view: ViewFreeAssetsFragment
     @Inject
-    lateinit var presenter: PresenterLoginTwoFragment
+    lateinit var presenter: PresenterFreeAssetsFragment
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -26,9 +26,11 @@ class LoginTwoFragment : Fragment() {
     ): View {
         return view.binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.onCreate()
     }
+
 
 }

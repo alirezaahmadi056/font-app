@@ -7,9 +7,7 @@ import javax.inject.Inject
 class PresenterAssetsActivity @Inject constructor() {
     @Inject
     lateinit var view : ViewAssetsActivity
-    fun onCreate(controller: Controller? = null){
-        controller?.let {
-            view.onStartUp(it)
-        }
+    fun onCreate(){
+        view.onStartUp()
     }
 }

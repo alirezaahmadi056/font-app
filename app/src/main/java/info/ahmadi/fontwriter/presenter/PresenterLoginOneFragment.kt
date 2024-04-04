@@ -7,9 +7,7 @@ import javax.inject.Inject
 class PresenterLoginOneFragment @Inject constructor() {
     @Inject
     lateinit var view: ViewLoginOneFragment
-    fun onCreate(controller: Controller? = null) {
-        controller?.let {
-            view.onLoginClick(controller)
-        }
+    fun onCreate() {
+        view.onLoginClick()
     }
 }

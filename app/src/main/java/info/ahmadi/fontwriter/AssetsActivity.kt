@@ -1,12 +1,10 @@
 package info.ahmadi.fontwriter
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import dagger.hilt.android.AndroidEntryPoint
 import info.ahmadi.fontwriter.controller.Controller
+import info.ahmadi.fontwriter.customAd.ViewPagerAdapter
 import info.ahmadi.fontwriter.presenter.PresenterAssetsActivity
 import info.ahmadi.fontwriter.view.ViewAssetsActivity
 import javax.inject.Inject
@@ -20,9 +18,9 @@ class AssetsActivity : AppCompatActivity() , Controller{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(view.binding.root)
-        presenter.onCreate(this)
-    }
+        presenter.onCreate()
 
+    }
     override fun finishFromController() {
         finish()
     }

@@ -8,15 +8,14 @@ import javax.inject.Inject
 class PresenterHomeActivity @Inject constructor() {
     @Inject
     lateinit var view:ViewHomeActivity
-    fun onCreate(controller: Controller? = null,fragmentManager: FragmentManager){
-        controller?.let {
-            view.onStartUp(it)
-        }
-        view.changeTextColor(fragmentManager)
+    fun onCreate(){
+        view.onStartUp()
+        view.changeTextColor()
         view.changeGravity()
         view.changeTextSize()
         view.clearText()
         view.onAssetsClick()
         view.saveText()
+        view.onContactClick()
     }
 }

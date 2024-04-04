@@ -23,7 +23,9 @@ import javax.inject.Inject
 class ViewSplashActivity @Inject constructor(@ActivityContext context: Context) :
     FrameLayout(context) {
     val binding = ActivitySplashBinding.inflate(LayoutInflater.from(context))
-    fun onStartUp(controller: Controller) {
+    @Inject
+    lateinit var controller: Controller
+    fun onStartUp() {
         val goToHome = flow {
             delay(3000L)
             emit(true)
@@ -36,7 +38,7 @@ class ViewSplashActivity @Inject constructor(@ActivityContext context: Context) 
                     controller.startActivityFromController(
                         intent = Intent(
                             context,
-                            if (login) HomeActivity::class.java else HomeActivity::class.java
+                            if (login) HomeActivity::class.java else LoginActivity::class.java
                         )
                     )
                 }

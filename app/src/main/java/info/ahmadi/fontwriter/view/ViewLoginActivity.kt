@@ -30,8 +30,9 @@ import javax.inject.Inject
 class ViewLoginActivity @Inject constructor(@ActivityContext context: Context) :
     FrameLayout(context) {
     val binding = ActivityLoginBinding.inflate(LayoutInflater.from(context))
-
-    fun onStartUp(controller: Controller){
+    @Inject
+    lateinit var controller: Controller
+    fun onStartUp(){
         controller.changeFragment(LoginOneFragment())
     }
 

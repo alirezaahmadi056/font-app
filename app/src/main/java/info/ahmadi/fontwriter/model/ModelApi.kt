@@ -32,5 +32,7 @@ data class AssetsApiResponseData(
     @SerializedName("name")
     val name:String,
     @SerializedName("link")
-    val link:String
+    val link:String,
+    @SerializedName("is_download")
+    val isDownload:Boolean
 )

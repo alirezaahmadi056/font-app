@@ -13,7 +13,7 @@
         tools:context=".HomeActivity">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/main"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".HomeActivity">
@@ -27,6 +27,17 @@
                 android:id="@+id/export"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="راه های ارتباطی"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/export"
+                app:layout_constraintEnd_toStartOf="@+id/export"
+                app:layout_constraintTop_toTopOf="@+id/export" />
 
             <ImageView
                 android:id="@+id/emoji"

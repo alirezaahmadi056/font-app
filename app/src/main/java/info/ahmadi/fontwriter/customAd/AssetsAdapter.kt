@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -27,13 +25,18 @@ class AssetsAdapter @Inject constructor() : RecyclerView.Adapter<AssetsAdapter.V
     inner class View(private val binding: AdapterAssetsBinding, private val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
         private val kDownloader = KDownloader.create(context)
-        private val dirPath = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)!!.path + "/fontwriter"
+        private val dirPathGold = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)!!.path + "/fontwriter/assets"
+        private val dirPathFree = "/storage/emulated/0/Download/fontwriter/assets"
+        private var dirPath = dirPathFree
         private lateinit var downloadedFile:File
 
         fun onCreate(position: Int) {
             Picasso.get().load(items[position].link).into(binding.image)
             binding.name.text = items[position].name
             binding.placeHolder.setOnClickListener {
+
+                dirPath = if (items[position].isDownload) dirPathFree else dirPathGold
+                Log.i("jjj", "onCreate: ${dirPath} ${items[position].isDownload}")
                 val fileName = items[position].name
                 downloadedFile = File(dirPath,fileName)
 
@@ -92,7 +95,7 @@ class AssetsAdapter @Inject constructor() : RecyclerView.Adapter<AssetsAdapter.V
     override fun getItemCount(): Int = items.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(newItem: ArrayList<AssetsApiResponseData>) {
+    fun updateData(newItem: List<AssetsApiResponseData>) {
         this.items.clear()
         this.items.addAll(newItem)
         notifyDataSetChanged()

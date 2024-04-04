@@ -1,6 +1,7 @@
 package info.ahmadi.fontwriter.view
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.Toast
@@ -15,15 +16,19 @@ import info.ahmadi.fontwriter.model.phone
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.await
 import retrofit2.awaitResponse
 import javax.inject.Inject
+import kotlin.math.log
 
 @FragmentScoped
 class ViewLoginOneFragment @Inject constructor(@ActivityContext context: Context) : FrameLayout(context)  {
     val binding = FragmentLoginOneBinding.inflate(LayoutInflater.from(context))
     @Inject
     lateinit var api: ApiInterface
-    fun onLoginClick(controller: Controller) {
+    @Inject
+    lateinit var controller: Controller
+    fun onLoginClick() {
         binding.login.setOnClickListener {
             if (binding.phone.text.toString().length == 11 && binding.phone.text.toString()
                     .startsWith("09")
@@ -31,28 +36,41 @@ class ViewLoginOneFragment @Inject constructor(@ActivityContext context: Context
                 if (binding.login.text == "ارسال کد") {
                     binding.login.text = "منتظر بمانید"
                     phone = binding.phone.text.toString()
-                    requestApi(controller)
+                    requestApi()
                 }
             } else {
                 Toast.makeText(context, "شماره همراه شما تایید نشد", Toast.LENGTH_SHORT).show()
             }
         }
     }
-    private fun requestApi(controller: Controller) {
+    private fun requestApi() {
         CoroutineScope(Dispatchers.IO).launch {
             val response =
-                api.loginApi(LoginApiRequest(binding.phone.text.toString())).awaitResponse()
+                try {
+                    api.loginApi(LoginApiRequest(binding.phone.text.toString())).awaitResponse()
+                }catch (_:Exception){
+                    CoroutineScope(Dispatchers.Main).launch {
+                        binding.login.text = "ارسال کد"
+                        controller.networkError(context, retry = {
+                            requestApi()
+
+                        }, exit = {
+                            controller.finishFromController()
+                        })
+                    }
+                    return@launch
+                }
             if (response.code() == 200) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    binding.login.text = "ارسال کد"
                     controller.changeFragment(LoginTwoFragment())
+                    binding.login.text = "ارسال کد"
                 }
 
             } else {
                 CoroutineScope(Dispatchers.Main).launch {
                     binding.login.text = "ارسال کد"
                     controller.networkError(context, retry = {
-                        requestApi(controller)
+                        requestApi()
                     }, exit = {
                         controller.finishFromController()
                     })

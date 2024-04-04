@@ -3,6 +3,7 @@ package info.ahmadi.fontwriter.customAd
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -20,11 +21,12 @@ import javax.inject.Inject
 class FontAdapter @Inject constructor() : RecyclerView.Adapter<FontAdapter.View>() {
     private var items: ArrayList<FontApiResponseData> = ArrayList()
     private var available = false
-    private val dir = "/storage/emulated/0/Download/fontwriter/fonts"
+
     private var controller : Controller? = null
     inner class View(private val binding: AdapterFontBinding, private val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
         private val kDownloader = KDownloader.create(context)
+        private val dir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)!!.path + "/fontwriter/fonts"
         fun onCreate(position: Int) {
             Picasso.get().load(items[position].image).into(binding.image)
             binding.name.text = items[position].name
@@ -47,10 +49,11 @@ class FontAdapter @Inject constructor() : RecyclerView.Adapter<FontAdapter.View>
             ).build()
 
             kDownloader.enqueue(request, onStart = {
-                Toast.makeText(context, "درحال دریافت فایل", Toast.LENGTH_SHORT).show()
+                controller?.changeState(true)
             }, onCompleted = {
                 Toast.makeText(context, "اتمام دریافت", Toast.LENGTH_SHORT).show()
                 controller?.changeTextFont(Typeface.createFromFile("${dir}/${items[position].name}"))
+                controller?.changeState(false)
 
             }, onError = {
                 Toast.makeText(context, "مشکل در دریافت فایل", Toast.LENGTH_SHORT).show()

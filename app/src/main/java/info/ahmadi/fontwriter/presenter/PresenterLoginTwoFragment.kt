@@ -7,13 +7,12 @@ import javax.inject.Inject
 class PresenterLoginTwoFragment @Inject constructor(){
     @Inject
     lateinit var view:ViewLoginTwoFragment
-    fun onCreate(controller: Controller? = null){
+    fun onCreate(){
         view.startTimer()
         view.onStartUp()
-        controller?.let {
-            view.focusEditText(controller)
-            view.onResendCode(controller)
-            view.onChangeNumber(controller)
-        }
+
+        view.focusEditText()
+        view.onResendCode()
+        view.onChangeNumber()
     }
 }

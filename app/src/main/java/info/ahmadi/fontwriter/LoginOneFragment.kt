@@ -26,7 +26,7 @@ class LoginOneFragment : Fragment() , Controller{
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter.onCreate(this)
+        presenter.onCreate()
     }
     override fun changeFragment(fragment: Fragment) {
         requireActivity().supportFragmentManager.beginTransaction().replace(R.id.fragment,fragment).commit()

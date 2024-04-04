@@ -37,6 +37,9 @@ class ViewLoginTwoFragment @Inject constructor(@ActivityContext context: Context
     @Inject
     lateinit var api: ApiInterface
 
+    @Inject
+    lateinit var controller: Controller
+
     fun onStartUp(){
         binding.title.text = "کد ارسالی به شماره ی ${phone} را وارد نمایید "
     }
@@ -63,7 +66,7 @@ class ViewLoginTwoFragment @Inject constructor(@ActivityContext context: Context
         }
     }
 
-    fun focusEditText(controller: Controller) {
+    fun focusEditText() {
         var userCode = ""
         var c1 = ""
         var c2 = ""
@@ -75,67 +78,79 @@ class ViewLoginTwoFragment @Inject constructor(@ActivityContext context: Context
             binding.editText2.requestFocus()
             c1 = text.toString()
             userCode = c1 + c2 + c3 + c4 + c5 + c6
-            checkCode(userCode, controller)
+            checkCode(userCode)
 
         }
         binding.editText2.doOnTextChanged { text, _, _, _ ->
             binding.editText3.requestFocus()
             c2 = text.toString()
             userCode = c1 + c2 + c3 + c4 + c5 + c6
-            checkCode(userCode, controller)
+            checkCode(userCode)
         }
         binding.editText3.doOnTextChanged { text, _, _, _ ->
             binding.editText4.requestFocus()
             c3 = text.toString()
             userCode = c1 + c2 + c3 + c4 + c5 + c6
-            checkCode(userCode, controller)
+            checkCode(userCode )
         }
         binding.editText4.doOnTextChanged { text, _, _, _ ->
             binding.editText5.requestFocus()
             c4 = text.toString()
             userCode = c1 + c2 + c3 + c4 + c5 + c6
-            checkCode(userCode, controller)
+            checkCode(userCode )
         }
         binding.editText5.doOnTextChanged { text, _, _, _ ->
             binding.editText6.requestFocus()
             c5 = text.toString()
             userCode = c1 + c2 + c3 + c4 + c5 + c6
-            checkCode(userCode, controller)
+            checkCode(userCode )
 
         }
         binding.editText6.doOnTextChanged { text, _, _, _ ->
             c6 = text.toString()
             userCode = c1 + c2 + c3 + c4 + c5 + c6
-            checkCode(userCode, controller)
+            checkCode(userCode )
         }
     }
 
-    fun onChangeNumber(controller: Controller) {
+    fun onChangeNumber() {
         binding.changeNumber.setOnClickListener {
             controller.changeFragment(LoginOneFragment())
         }
     }
 
-    fun onResendCode(controller: Controller) {
+    fun onResendCode() {
         binding.retry.setOnClickListener {
             if (binding.retry.text == "ارسال مجدد"){
                 availableCode = true
                 startTimer()
-                resendCode(controller)
+                resendCode()
             }
         }
     }
 
-    private fun resendCode(controller: Controller) {
+    private fun resendCode() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response =
+            val response = try {
                 api.loginApi(LoginApiRequest(phone)).awaitResponse()
+            }catch (_:Exception){
+                CoroutineScope(Dispatchers.Main).launch {
+                    controller.networkError(context, customBinding = {
+                        it.exit.text = "برگشت"
+                    }, retry = {
+                        resendCode()
+                    }, exit = {
+                        controller.changeFragment(LoginOneFragment())
+                    })
+                }
+                return@launch
+            }
             if (response.code() != 200) {
                 CoroutineScope(Dispatchers.Main).launch {
                     controller.networkError(context, customBinding = {
                         it.exit.text = "برگشت"
                     }, retry = {
-                        resendCode(controller)
+                        resendCode()
                     }, exit = {
                         controller.changeFragment(LoginOneFragment())
                     })
@@ -144,8 +159,7 @@ class ViewLoginTwoFragment @Inject constructor(@ActivityContext context: Context
         }
     }
 
-    private fun checkCode(userCode: String, controller: Controller) {
-        Log.i("jjj", "checkCode: $userCode")
+    private fun checkCode(userCode: String) {
         if (userCode.length == 6) {
             if (availableCode) {
                 CoroutineScope(Dispatchers.IO).launch {
@@ -181,7 +195,7 @@ class ViewLoginTwoFragment @Inject constructor(@ActivityContext context: Context
                             controller.networkError(context, customBinding = {
                                 it.exit.text = "بستن"
                             }, retry = {
-                                checkCode(userCode, controller)
+                                checkCode(userCode)
                             }
                             )
                         }

@@ -20,12 +20,10 @@ class HomeActivity : AppCompatActivity() , Controller {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(view.binding.root)
-        presenter.onCreate(this,supportFragmentManager)
+        presenter.onCreate()
     }
 
     override fun finishFromController() {
         finish()
     }
-
-
 }

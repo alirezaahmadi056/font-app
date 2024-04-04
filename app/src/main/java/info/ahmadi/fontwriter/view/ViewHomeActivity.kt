@@ -1,17 +1,22 @@
 package info.ahmadi.fontwriter.view
 
 import android.annotation.SuppressLint
+import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.Typeface
 import android.net.Uri
-import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
+import android.text.Layout
+import android.text.StaticLayout
+import android.text.TextPaint
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -23,6 +28,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import info.ahmadi.fontwriter.AssetsActivity
@@ -31,12 +37,14 @@ import info.ahmadi.fontwriter.api.ApiInterface
 import info.ahmadi.fontwriter.controller.Controller
 import info.ahmadi.fontwriter.customAd.FontAdapter
 import info.ahmadi.fontwriter.databinding.ActivityHomeBinding
+import info.ahmadi.fontwriter.databinding.DialogContactBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.jfenn.colorpickerdialog.dialogs.ColorPickerDialog
 import retrofit2.awaitResponse
-import java.io.File
+import java.io.IOException
+import java.util.Objects
 import javax.inject.Inject
 
 
@@ -44,8 +52,9 @@ import javax.inject.Inject
 class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
     FrameLayout(context), Controller {
     val binding = ActivityHomeBinding.inflate(LayoutInflater.from(context))
+    private var align: Layout.Alignment = Layout.Alignment.ALIGN_CENTER
+
     private var stateGravity = 0
-    private var stateStyle = 0
 
     @Inject
     lateinit var api: ApiInterface
@@ -53,45 +62,86 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
     @Inject
     lateinit var adapter: FontAdapter
 
-    // save text in storage
+    @Inject
+    lateinit var controller: Controller
+
+    @Inject
+    lateinit var fragment: FragmentManager
+
     fun saveText() {
         binding.export.setOnClickListener {
-            val paint = Paint()
+            if (binding.text.text.isNotEmpty()) {
+                val text = binding.text.text.toString()
+                val width = binding.text.width
 
-            val text = binding.text.text.toString()
-            val textBounds = Rect()
-            paint.getTextBounds(text, 0, text.length, textBounds)
+                val textPaint = TextPaint().apply {
+                    color = binding.text.currentTextColor
+                    textSize = binding.text.textSize
+                    typeface = binding.text.typeface
+                }
 
-            val bitmap = Bitmap.createBitmap(
-                binding.text.width,
-                binding.text.height,
-                Bitmap.Config.ARGB_8888
-            )
-            paint.color = binding.text.currentTextColor
-            paint.textSize = binding.text.textSize
-            paint.typeface = binding.text.typeface
+                val textLayout = StaticLayout.Builder.obtain(
+                    text, 0, text.length, textPaint, width
+                )
+                    .setAlignment(align)
+                    .setLineSpacing(0f, 1f)
+                    .build()
 
-            val canvas = Canvas(bitmap)
-            val canvasWidth = canvas.width
-            val canvasHeight = canvas.height
+                val bitmap = Bitmap.createBitmap(width, textLayout.height, Bitmap.Config.ARGB_8888)
+                val canvas = Canvas(bitmap)
 
-            val textWidth = paint.measureText(text)
-            val textX = (canvasWidth - textWidth) / 2
-            val textY = (canvasHeight + textBounds.height()) / 2
+                textLayout.draw(canvas)
 
-            canvas.drawText(text, textX, textY.toFloat(), paint)
+                saveBitmapToScopedStorage(bitmap)
 
-            MediaStore.Images.Media.insertImage(
-                context.contentResolver,
-                bitmap,
-                "fontwriter",
-                "fontwriter"
-            )
-            Toast.makeText(context, "ذخیره شد", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "متنی برای ذخیره سازی وجود ندارد", Toast.LENGTH_LONG).show()
+            }
         }
     }
-    // get font list
-    fun onStartUp(controller: Controller) {
+
+    fun onContactClick() {
+        binding.contact.setOnClickListener {
+            val dialogBinding = DialogContactBinding.inflate(LayoutInflater.from(context))
+            val dialog = MaterialAlertDialogBuilder(context)
+                .setView(dialogBinding.root)
+                .create()
+            dialogBinding.instagram.setOnClickListener {
+                openLink(
+                    "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.instagram.com/lrn.ir/%3Flocale%3Ddehttps%253A555ten.com%253Flocale%253Ddehttps%253A%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252Fhttps%253A%252F%252Ffestival.newyorker.com%252F%253Flocale%253Ddehttps%253A555ten.com%252F%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252Fhttps%253A%252F%252Ffestival.newyorker.com%252F%253Flocale%253Ddehttps%253A555ten.com%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252Fhttps%253A%252F%252Ffestival.newyorker.com%252F%253Flocale%253Ddehttps%253A555ten.com%252F%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252Fhttps%253A%252F%252Ffestival.newyorker.com%252Fhttps%253A%252F%252F555ten.com%252F&ved=2ahUKEwiijNPih6eFAxWTgP0HHdtkBTsQFnoECBEQAQ&usg=AOvVaw2D3OIWt_3eTdLQji4rnQvz"
+                )
+            }
+            dialogBinding.site.setOnClickListener {
+                openLink("https://alirezaahmadi.info/")
+            }
+            dialog.show()
+        }
+    }
+
+    private fun openLink(link: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
+        context.startActivity(intent)
+    }
+
+    private fun saveBitmapToScopedStorage(bitmap: Bitmap) {
+        val contentResolver: ContentResolver = context.contentResolver
+        val values = ContentValues()
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, "fontwriter")
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+        val imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        try {
+            val os = contentResolver.openOutputStream(Objects.requireNonNull(imageUri) ?: Uri.EMPTY)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os!!)
+            os.close()
+            Toast.makeText(context, "ذخیره شد", Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Toast.makeText(context, "خطا در ذخیره سازی", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    fun onStartUp() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = api.getFonts().awaitResponse()
             if (response.code() == 200) {
@@ -107,7 +157,7 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
             } else {
                 CoroutineScope(Dispatchers.Main).launch {
                     controller.networkError(context, retry = {
-                        onStartUp(controller)
+                        onStartUp()
                     }, exit = {
                         controller.finishFromController()
                     })
@@ -116,8 +166,7 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
         }
     }
 
-    // change text color with color picker dialog
-    fun changeTextColor(fragment: FragmentManager) {
+    fun changeTextColor() {
         binding.changeColor.setOnClickListener {
             ColorPickerDialog()
                 .withListener { _, color ->
@@ -127,7 +176,6 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
         }
     }
 
-    // change text size with seek bar
     fun changeTextSize() {
         binding.textSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
@@ -144,30 +192,50 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
         })
     }
 
-    // clear text box
+    override fun changeState(state: Boolean) {
+        if (state) {
+            binding.progress.visibility = View.VISIBLE
+        } else {
+            binding.progress.visibility = View.INVISIBLE
+        }
+    }
+
     fun clearText() {
         binding.delete.setOnClickListener {
             binding.text.text = Editable.Factory.getInstance().newEditable("")
         }
     }
 
-    // go to assets activity
     fun onAssetsClick() {
         binding.emoji.setOnClickListener {
             context.startActivity(Intent(context, AssetsActivity::class.java))
         }
     }
 
-    // change gravity text box
     @SuppressLint("RtlHardcoded")
     fun changeGravity() {
         binding.gravity.setOnClickListener {
             stateGravity = (stateGravity + 1) % 3
             binding.text.gravity = when (stateGravity) {
-                0 -> Gravity.CENTER
-                1 -> Gravity.RIGHT
-                2 -> Gravity.LEFT
-                else -> Gravity.CENTER
+                0 -> {
+                    align = Layout.Alignment.ALIGN_CENTER
+                    Gravity.CENTER
+                }
+
+                1 -> {
+                    align = Layout.Alignment.ALIGN_NORMAL
+                    Gravity.RIGHT
+                }
+
+                2 -> {
+                    align = Layout.Alignment.ALIGN_OPPOSITE
+                    Gravity.LEFT
+                }
+
+                else -> {
+                    align = Layout.Alignment.ALIGN_CENTER
+                    Gravity.CENTER
+                }
             }
             binding.gravity.setImageDrawable(
                 when (stateGravity) {
@@ -182,6 +250,5 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
 
     override fun changeTextFont(typeface: Typeface) {
         binding.text.typeface = typeface
-        Toast.makeText(context, "فونت مدنظر اعمال شد ", Toast.LENGTH_SHORT).show()
     }
 }
