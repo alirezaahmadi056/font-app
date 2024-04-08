@@ -11,9 +11,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.kdownloader.KDownloader
 import com.squareup.picasso.Picasso
 import info.ahmadi.fontwriter.databinding.AdapterAssetsBinding
+import info.ahmadi.fontwriter.databinding.DialogDownloadBinding
 import info.ahmadi.fontwriter.model.AssetsApiResponseData
 import java.io.File
 import javax.inject.Inject
@@ -34,18 +36,36 @@ class AssetsAdapter @Inject constructor() : RecyclerView.Adapter<AssetsAdapter.V
             Picasso.get().load(items[position].link).into(binding.image)
             binding.name.text = items[position].name
             binding.placeHolder.setOnClickListener {
-
-                dirPath = if (items[position].isDownload) dirPathFree else dirPathGold
-                Log.i("jjj", "onCreate: ${dirPath} ${items[position].isDownload}")
                 val fileName = items[position].name
-                downloadedFile = File(dirPath,fileName)
-
-                if (downloadedFile.exists()) {
-                    shareFile(downloadedFile)
-                    
-                } else {
-                    downloadFile(position)
+                if (items[position].isDownload){
+                    dirPath = dirPathFree
+                    val dialogBinding = DialogDownloadBinding.inflate(LayoutInflater.from(context))
+                    val dialog = MaterialAlertDialogBuilder(this.context)
+                        .setView(dialogBinding.root)
+                        .create()
+                    downloadedFile = File(dirPath,fileName)
+                    Picasso.get().load(items[position].link).into(dialogBinding.imageView)
+                    dialogBinding.saveImage.setOnClickListener {
+                        if (this.downloadedFile.exists()) {
+                            Toast.makeText(dialogBinding.root.context, "ذخیره شد", Toast.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                        } else {
+                            this.downloadFile(position,true)
+                        }
+                    }
+                    dialog.show()
+                }else{
+                    dirPath = dirPathGold
+                    downloadedFile = File(dirPath,fileName)
+                    if (downloadedFile.exists()) {
+                        shareFile(downloadedFile)
+                    } else {
+                        downloadFile(position)
+                    }
                 }
+
+
+
             }
         }
         private fun shareFile(file: File) {
@@ -61,18 +81,20 @@ class AssetsAdapter @Inject constructor() : RecyclerView.Adapter<AssetsAdapter.V
         }
 
 
-        private fun downloadFile(position: Int) {
+        private fun downloadFile(position: Int,isDownload:Boolean=false) {
             val url = items[position].link
             val fileName = items[position].name
 
             val req = kDownloader.newRequestBuilder(url, dirPath, fileName)
                 .build()
-            kDownloader.enqueue(req, onStart = {
-                Toast.makeText(context, "درحال دریافت فایل", Toast.LENGTH_SHORT).show()
-            }, onCompleted = {
-                Toast.makeText(context, "اتمام دریافت", Toast.LENGTH_SHORT).show()
-                val downloadedFile = File(dirPath,fileName)
-                shareFile(downloadedFile)
+            kDownloader.enqueue(req, onStart = {}, onCompleted = {
+
+                if (!isDownload){
+                    val downloadedFile = File(dirPath,fileName)
+                    shareFile(downloadedFile)
+                }else{
+                    Toast.makeText(context, "ذخیره شد", Toast.LENGTH_SHORT).show()
+                }
 
             }, onError = {
                 Toast.makeText(context, "مشکل در دریافت فایل", Toast.LENGTH_SHORT).show()

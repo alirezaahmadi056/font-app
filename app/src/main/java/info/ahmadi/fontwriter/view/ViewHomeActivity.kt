@@ -143,7 +143,18 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
 
     fun onStartUp() {
         CoroutineScope(Dispatchers.IO).launch {
-            val response = api.getFonts().awaitResponse()
+            val response = try {
+                api.getFonts().awaitResponse()
+            }catch (_:Exception){
+                CoroutineScope(Dispatchers.Main).launch {
+                    controller.networkError(context, retry = {
+                        onStartUp()
+                    }, exit = {
+                        controller.finishFromController()
+                    })
+                }
+                return@launch
+            }
             if (response.code() == 200) {
                 CoroutineScope(Dispatchers.Main).launch {
                     binding.progress.visibility = View.INVISIBLE
