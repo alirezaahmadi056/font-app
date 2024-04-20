@@ -29,7 +29,7 @@ class FontAdapter @Inject constructor() : RecyclerView.Adapter<FontAdapter.View>
         private val dir = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)!!.path + "/fontwriter/fonts"
         fun onCreate(position: Int) {
             Picasso.get().load(items[position].image).into(binding.image)
-            binding.name.text = items[position].name
+            binding.name.text = items[position].fontName
             binding.placeHolder.setOnClickListener {
                 val fontList = File(dir)
                 val font = File(fontList,items[position].name)

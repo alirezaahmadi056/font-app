@@ -1,6 +1,5 @@
 package info.ahmadi.fontwriter.view
 
-import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View

@@ -1,8 +1,9 @@
 [versions]
 agp = "8.2.2"
-androidGifDrawable = "1.2.17"
+androidGifDrawable = "1.2.28"
 base = "0.2.2"
 converterGson = "2.9.0"
+exoplayer = "2.19.1"
 kdownloader = "1.0.4"
 kotlin = "1.9.0"
 coreKtx = "1.12.0"
@@ -10,7 +11,7 @@ junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
-kotlinxCoroutinesCore = "1.6.4"
+kotlinxCoroutinesCore = "1.7.1"
 material = "1.11.0"
 activity = "1.8.2"
 constraintlayout = "2.1.4"
@@ -26,6 +27,7 @@ android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", v
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 base = { module = "me.jfenn.ColorPickerDialog:base", version.ref = "base" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+exoplayer = { module = "com.google.android.exoplayer:exoplayer", version.ref = "exoplayer" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
 hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroidCompilerVersion" }

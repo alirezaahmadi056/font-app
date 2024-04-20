@@ -17,5 +17,6 @@ class PresenterHomeActivity @Inject constructor() {
         view.onAssetsClick()
         view.saveText()
         view.onContactClick()
+        view.onHelperClick()
     }
 }

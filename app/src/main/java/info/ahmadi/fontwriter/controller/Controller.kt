@@ -25,6 +25,7 @@ interface Controller {
         binding.retry.setOnClickListener {
 
             if(binding.retry.text.toString() == "تلاش مجدد"){
+                dialog.dismiss()
                 retry(binding)
             }
         }

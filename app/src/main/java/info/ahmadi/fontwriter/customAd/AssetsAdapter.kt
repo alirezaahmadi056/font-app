@@ -34,7 +34,7 @@ class AssetsAdapter @Inject constructor() : RecyclerView.Adapter<AssetsAdapter.V
 
         fun onCreate(position: Int) {
             Picasso.get().load(items[position].link).into(binding.image)
-            binding.name.text = items[position].name
+            binding.name.text = items[position].assetsName
             binding.placeHolder.setOnClickListener {
                 val fileName = items[position].name
                 if (items[position].isDownload){

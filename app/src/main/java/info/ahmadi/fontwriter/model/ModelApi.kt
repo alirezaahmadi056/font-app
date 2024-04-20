@@ -4,35 +4,51 @@ import com.google.gson.annotations.SerializedName
 
 data class LoginApiRequest(
     @SerializedName("phone")
-    val phone : String
+    val phone: String
 )
+
 data class CheckCodeApiRequest(
     @SerializedName("phone")
     val phone: String,
     @SerializedName("code")
     val code: String
 )
+
 data class FontApiResponse(
     @SerializedName("fonts")
-    val fonts:ArrayList<FontApiResponseData>
+    val fonts: ArrayList<FontApiResponseData>
 )
+
 data class FontApiResponseData(
     @SerializedName("name")
-    val name:String,
+    val name: String,
     @SerializedName("image")
-    val image:String,
+    val image: String,
     @SerializedName("font")
-    val font:String
+    val font: String,
+    @SerializedName("font_name")
+    val fontName: String
 )
+
 data class AssetsApiResponse(
     @SerializedName("assets")
-    val assets:ArrayList<AssetsApiResponseData>
+    val assets: ArrayList<AssetsApiResponseData>
 )
+
 data class AssetsApiResponseData(
     @SerializedName("name")
-    val name:String,
+    val name: String,
     @SerializedName("link")
-    val link:String,
+    val link: String,
     @SerializedName("is_download")
-    val isDownload:Boolean
+    val isDownload: Boolean,
+    @SerializedName("asset_name")
+    val assetsName: String
+)
+
+data class VideoApiResponseData(
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("video")
+    val videoLink: String
 )

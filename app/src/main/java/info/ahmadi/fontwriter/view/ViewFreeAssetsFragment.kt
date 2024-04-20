@@ -1,7 +1,6 @@
 package info.ahmadi.fontwriter.view
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
@@ -17,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.awaitResponse
 import javax.inject.Inject
+
 @FragmentScoped
 class ViewFreeAssetsFragment @Inject constructor(@ActivityContext context:Context) : FrameLayout(context){
     val binding = FragmentFreeAssetsBinding.inflate(LayoutInflater.from(context))

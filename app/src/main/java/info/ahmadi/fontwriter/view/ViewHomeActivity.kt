@@ -7,9 +7,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
 import android.graphics.Typeface
 import android.net.Uri
 import android.provider.MediaStore
@@ -32,6 +29,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import info.ahmadi.fontwriter.AssetsActivity
+import info.ahmadi.fontwriter.HelperActivity
 import info.ahmadi.fontwriter.R
 import info.ahmadi.fontwriter.api.ApiInterface
 import info.ahmadi.fontwriter.controller.Controller
@@ -140,7 +138,11 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
         }
     }
 
-
+    fun onHelperClick(){
+        binding.helper.setOnClickListener {
+            context.startActivity(Intent(context,HelperActivity::class.java))
+        }
+    }
     fun onStartUp() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = try {

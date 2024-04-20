@@ -13,7 +13,7 @@
         tools:context=".HomeActivity">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/main"
-            android:visibility="invisible"
+            android:visibility="visible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".HomeActivity">
@@ -26,7 +26,9 @@
                 android:layout_margin="10dp"
                 android:id="@+id/export"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@id/emoji"
+                app:layout_constraintBottom_toBottomOf="@id/emoji"
+                />
 
             <Button
                 android:id="@+id/contact"
@@ -48,6 +50,18 @@
                 android:layout_margin="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/helper"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:contentDescription="@string/todo"
+                android:src="@drawable/ic_question"
+                app:layout_constraintStart_toEndOf="@+id/emoji"
+                app:layout_constraintTop_toTopOf="@id/emoji"
+                app:layout_constraintBottom_toBottomOf="@id/emoji"
+                android:layout_margin="10dp"
+                />
             <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper
                 android:id="@+id/verticalSeekBarWrapper"
                 android:layout_width="wrap_content"

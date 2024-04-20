@@ -1,7 +1,6 @@
 package info.ahmadi.fontwriter.view
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.Toast
@@ -16,10 +15,8 @@ import info.ahmadi.fontwriter.model.phone
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import retrofit2.await
 import retrofit2.awaitResponse
 import javax.inject.Inject
-import kotlin.math.log
 
 @FragmentScoped
 class ViewLoginOneFragment @Inject constructor(@ActivityContext context: Context) : FrameLayout(context)  {
