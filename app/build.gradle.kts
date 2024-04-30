@@ -53,7 +53,6 @@ dependencies {
     implementation(libs.base)
     implementation(libs.kdownloader)
     implementation(libs.android.gif.drawable)
-    implementation(libs.exoplayer)
 
 
     implementation(libs.androidx.core.ktx)

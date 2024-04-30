@@ -4,9 +4,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.FragmentScoped
 import info.ahmadi.fontwriter.LoginTwoFragment
+import info.ahmadi.fontwriter.R
 import info.ahmadi.fontwriter.api.ApiInterface
 import info.ahmadi.fontwriter.controller.Controller
 import info.ahmadi.fontwriter.databinding.FragmentLoginOneBinding
@@ -19,10 +22,13 @@ import retrofit2.awaitResponse
 import javax.inject.Inject
 
 @FragmentScoped
-class ViewLoginOneFragment @Inject constructor(@ActivityContext context: Context) : FrameLayout(context)  {
+class ViewLoginOneFragment @Inject constructor(@ActivityContext context: Context) :
+    FrameLayout(context) {
     val binding = FragmentLoginOneBinding.inflate(LayoutInflater.from(context))
+
     @Inject
     lateinit var api: ApiInterface
+
     @Inject
     lateinit var controller: Controller
     fun onLoginClick() {
@@ -40,12 +46,13 @@ class ViewLoginOneFragment @Inject constructor(@ActivityContext context: Context
             }
         }
     }
+
     private fun requestApi() {
         CoroutineScope(Dispatchers.IO).launch {
             val response =
                 try {
                     api.loginApi(LoginApiRequest(binding.phone.text.toString())).awaitResponse()
-                }catch (_:Exception){
+                } catch (_: Exception) {
                     CoroutineScope(Dispatchers.Main).launch {
                         binding.login.text = "ارسال کد"
                         controller.networkError(context, retry = {
@@ -67,12 +74,22 @@ class ViewLoginOneFragment @Inject constructor(@ActivityContext context: Context
                 CoroutineScope(Dispatchers.Main).launch {
                     binding.login.text = "ارسال کد"
                     controller.networkError(context, retry = {
+                        binding.login.text = "منتظر بمانید"
                         requestApi()
                     }, exit = {
                         controller.finishFromController()
                     })
                 }
             }
+        }
+    }
+
+    fun onRuleClick() {
+        binding.rule.setOnClickListener {
+            MaterialAlertDialogBuilder(context)
+                .setView(R.layout.dialog_rule)
+                .show()
+
         }
     }
 

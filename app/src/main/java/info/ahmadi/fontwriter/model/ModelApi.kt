@@ -47,8 +47,6 @@ data class AssetsApiResponseData(
 )
 
 data class VideoApiResponseData(
-    @SerializedName("name")
-    val name: String,
     @SerializedName("video")
     val videoLink: String
 )

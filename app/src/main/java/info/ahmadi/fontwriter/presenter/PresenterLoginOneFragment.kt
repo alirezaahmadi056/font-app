@@ -9,5 +9,6 @@ class PresenterLoginOneFragment @Inject constructor() {
     lateinit var view: ViewLoginOneFragment
     fun onCreate() {
         view.onLoginClick()
+        view.onRuleClick()
     }
 }

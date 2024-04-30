@@ -1,6 +1,5 @@
 package info.ahmadi.fontwriter.view
 
-import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
@@ -42,7 +41,6 @@ import kotlinx.coroutines.launch
 import me.jfenn.colorpickerdialog.dialogs.ColorPickerDialog
 import retrofit2.awaitResponse
 import java.io.IOException
-import java.util.Objects
 import javax.inject.Inject
 
 
@@ -128,7 +126,7 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/png")
         val imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
         try {
-            val os = contentResolver.openOutputStream(Objects.requireNonNull(imageUri) ?: Uri.EMPTY)
+            val os = contentResolver.openOutputStream(imageUri ?: Uri.EMPTY)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, os!!)
             os.close()
             Toast.makeText(context, "ذخیره شد", Toast.LENGTH_SHORT).show()
@@ -225,7 +223,6 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
         }
     }
 
-    @SuppressLint("RtlHardcoded")
     fun changeGravity() {
         binding.gravity.setOnClickListener {
             stateGravity = (stateGravity + 1) % 3
@@ -237,12 +234,12 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
 
                 1 -> {
                     align = Layout.Alignment.ALIGN_NORMAL
-                    Gravity.RIGHT
+                    Gravity.END
                 }
 
                 2 -> {
                     align = Layout.Alignment.ALIGN_OPPOSITE
-                    Gravity.LEFT
+                    Gravity.RIGHT
                 }
 
                 else -> {

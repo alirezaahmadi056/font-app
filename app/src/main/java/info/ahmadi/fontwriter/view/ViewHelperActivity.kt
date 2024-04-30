@@ -5,11 +5,8 @@ import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.MediaController
 import android.widget.Toast
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.Player
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import info.ahmadi.fontwriter.api.ApiInterface
@@ -24,7 +21,6 @@ import javax.inject.Inject
 @ActivityScoped
 class ViewHelperActivity @Inject constructor(@ActivityContext context: Context):FrameLayout(context) {
     val binding = ActivityHelperBinding.inflate(LayoutInflater.from(context))
-    private val exoPlayer = ExoPlayer.Builder(context).build()
     @Inject
     lateinit var api:ApiInterface
     @Inject
@@ -47,7 +43,6 @@ class ViewHelperActivity @Inject constructor(@ActivityContext context: Context):
                 CoroutineScope(Dispatchers.Main).launch {
                     binding.progress.visibility = View.INVISIBLE
                     binding.player.visibility = View.VISIBLE
-                    binding.title.text = response.body()!!.name
                     loadVideo(response.body()!!.videoLink)
                 }
             } else {
@@ -62,17 +57,16 @@ class ViewHelperActivity @Inject constructor(@ActivityContext context: Context):
         }
     }
     private fun loadVideo(link:String){
-        val media = MediaItem.Builder()
-            .setUri(Uri.parse(link))
-            .build()
-        exoPlayer.prepare()
-        exoPlayer.setMediaItem(media)
-        binding.player.player = exoPlayer
-        exoPlayer.playWhenReady = true
-        exoPlayer.addListener(object :Player.Listener{
-            override fun onPlayerError(error: PlaybackException) {
-                Toast.makeText(context, "انترنت خود را بررسی کنید", Toast.LENGTH_SHORT).show()
-            }
-        })
+        val controller = MediaController(context)
+        controller.setAnchorView(binding.player)
+        binding.player.setMediaController(controller)
+        binding.player.setVideoURI(Uri.parse(link))
+        binding.player.setOnPreparedListener {
+            it.start()
+        }
+        binding.player.setOnErrorListener { _, _, _ ->
+            Toast.makeText(context, "لطفا اینترنت خود را چک کنید", Toast.LENGTH_SHORT).show()
+            false
+        }
     }
 }
