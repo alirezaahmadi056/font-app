@@ -104,7 +104,7 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
                 .create()
             dialogBinding.instagram.setOnClickListener {
                 openLink(
-                    "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.instagram.com/lrn.ir/%3Flocale%3Ddehttps%253A555ten.com%253Flocale%253Ddehttps%253A%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252Fhttps%253A%252F%252Ffestival.newyorker.com%252F%253Flocale%253Ddehttps%253A555ten.com%252F%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252Fhttps%253A%252F%252Ffestival.newyorker.com%252F%253Flocale%253Ddehttps%253A555ten.com%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252Fhttps%253A%252F%252Ffestival.newyorker.com%252F%253Flocale%253Ddehttps%253A555ten.com%252F%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F555ten.com%252F%253Flocale%253Ddehttps%253A%252F%252F555ten.com%252Fhttps%253A%252F%252Ffestival.newyorker.com%252Fhttps%253A%252F%252F555ten.com%252F&ved=2ahUKEwiijNPih6eFAxWTgP0HHdtkBTsQFnoECBEQAQ&usg=AOvVaw2D3OIWt_3eTdLQji4rnQvz"
+                    "https://instagram.com/Lrn.ir"
                 )
             }
             dialogBinding.site.setOnClickListener {
@@ -136,16 +136,17 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
         }
     }
 
-    fun onHelperClick(){
+    fun onHelperClick() {
         binding.helper.setOnClickListener {
-            context.startActivity(Intent(context,HelperActivity::class.java))
+            context.startActivity(Intent(context, HelperActivity::class.java))
         }
     }
+
     fun onStartUp() {
         CoroutineScope(Dispatchers.IO).launch {
             val response = try {
                 api.getFonts().awaitResponse()
-            }catch (_:Exception){
+            } catch (_: Exception) {
                 CoroutineScope(Dispatchers.Main).launch {
                     controller.networkError(context, retry = {
                         onStartUp()
