@@ -235,12 +235,12 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
 
                 1 -> {
                     align = Layout.Alignment.ALIGN_NORMAL
-                    Gravity.END
+                    Gravity.START
                 }
 
                 2 -> {
                     align = Layout.Alignment.ALIGN_OPPOSITE
-                    Gravity.RIGHT
+                    Gravity.END
                 }
 
                 else -> {

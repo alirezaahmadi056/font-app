@@ -3,6 +3,7 @@ package info.ahmadi.fontwriter.view
 import android.content.Context
 import android.view.LayoutInflater
 import android.widget.FrameLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.scopes.ActivityScoped
 import info.ahmadi.fontwriter.customAd.ViewPagerAdapter
@@ -15,8 +16,15 @@ class ViewAssetsActivity @Inject constructor(@ActivityContext context: Context) 
     val binding = ActivityAssetsBinding.inflate(LayoutInflater.from(context))
     @Inject
     lateinit var adapter: ViewPagerAdapter
+
+    private val tabText = arrayOf(
+        "ویژه ها",
+        "پس زمینه ها"
+    )
     fun onStartUp() {
         binding.viewPager.adapter = adapter
-        binding.tabLayout.setupWithViewPager(binding.viewPager)
+        TabLayoutMediator(binding.tabLayout,binding.viewPager){tab , position ->
+            tab.text = tabText[position]
+        }.attach()
     }
 }
