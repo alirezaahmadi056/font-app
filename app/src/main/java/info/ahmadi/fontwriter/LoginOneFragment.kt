@@ -1,6 +1,7 @@
 package info.ahmadi.fontwriter
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,10 @@ import info.ahmadi.fontwriter.controller.Controller
 import info.ahmadi.fontwriter.presenter.PresenterLoginOneFragment
 import info.ahmadi.fontwriter.view.ViewLoginOneFragment
 import javax.inject.Inject
+import kotlin.math.log
 
 @AndroidEntryPoint
-class LoginOneFragment : Fragment() , Controller{
+class LoginOneFragment : Fragment() {
     @Inject
     lateinit var view:ViewLoginOneFragment
     @Inject
@@ -28,11 +30,5 @@ class LoginOneFragment : Fragment() , Controller{
         super.onViewCreated(view, savedInstanceState)
         presenter.onCreate()
     }
-    override fun changeFragment(fragment: Fragment) {
-        requireActivity().supportFragmentManager.beginTransaction().replace(R.id.fragment,fragment).commit()
-    }
 
-    override fun finishFromController() {
-        requireActivity().finish()
-    }
 }

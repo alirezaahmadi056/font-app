@@ -1,6 +1,7 @@
 package info.ahmadi.fontwriter.view
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.FrameLayout
 import android.widget.Toast
@@ -59,6 +60,7 @@ class ViewLoginOneFragment @Inject constructor(@ActivityContext context: Context
                             requestApi()
 
                         }, exit = {
+                            Log.i("jjj", "requestApi: hello")
                             controller.finishFromController()
                         })
                     }

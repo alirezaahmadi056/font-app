@@ -32,4 +32,8 @@ class LoginActivity : AppCompatActivity() , Controller{
         finish()
         startActivity(intent)
     }
+
+    override fun finishFromController() {
+       finish()
+    }
 }
