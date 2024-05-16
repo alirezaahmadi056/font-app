@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.cli.js.klib.shouldGoToNextIcRound
+
 plugins {
     kotlin("kapt")
     alias(libs.plugins.androidApplication)
@@ -23,7 +25,8 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
