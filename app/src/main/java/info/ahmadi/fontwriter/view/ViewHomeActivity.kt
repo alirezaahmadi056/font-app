@@ -191,7 +191,7 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
     fun changeTextSize() {
         binding.textSize.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                binding.text.textSize = (progress * 2).toFloat()
+                binding.text.textSize = (progress * 1.2).toFloat()
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
