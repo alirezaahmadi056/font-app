@@ -6,29 +6,29 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     tools:context=".HomeActivity">
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layoutDirection="ltr"
         tools:context=".HomeActivity">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/main"
-            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".HomeActivity">
+            android:visibility="invisible">
 
             <Button
+                android:id="@+id/export"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:text="ذخیره"
                 android:textStyle="bold"
-                android:layout_margin="10dp"
-                android:id="@+id/export"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/emoji"
                 app:layout_constraintBottom_toBottomOf="@id/emoji"
-                />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/emoji" />
 
             <Button
                 android:id="@+id/contact"
@@ -45,9 +45,9 @@
                 android:id="@+id/emoji"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_margin="10dp"
                 android:contentDescription="@string/todo"
                 android:src="@drawable/ic_assets"
-                android:layout_margin="10dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,13 +55,13 @@
                 android:id="@+id/helper"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_margin="10dp"
                 android:contentDescription="@string/todo"
                 android:src="@drawable/ic_question"
-                app:layout_constraintStart_toEndOf="@+id/emoji"
-                app:layout_constraintTop_toTopOf="@id/emoji"
                 app:layout_constraintBottom_toBottomOf="@id/emoji"
-                android:layout_margin="10dp"
-                />
+                app:layout_constraintStart_toEndOf="@+id/emoji"
+                app:layout_constraintTop_toTopOf="@id/emoji" />
+
             <com.h6ah4i.android.widget.verticalseekbar.VerticalSeekBarWrapper
                 android:id="@+id/verticalSeekBarWrapper"
                 android:layout_width="wrap_content"
@@ -83,17 +83,16 @@
             <EditText
                 android:id="@+id/text"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:minHeight="200dp"
+                android:layout_height="0dp"
                 android:layout_margin="10dp"
+                android:background="@null"
                 android:gravity="center"
                 android:inputType="textMultiLine"
-                app:layout_constraintStart_toEndOf="@id/verticalSeekBarWrapper"
-                app:layout_constraintEnd_toStartOf="@id/linear"
-                app:layout_constraintTop_toTopOf="@id/verticalSeekBarWrapper"
+                android:minHeight="200dp"
                 app:layout_constraintBottom_toBottomOf="@id/verticalSeekBarWrapper"
-                />
+                app:layout_constraintEnd_toStartOf="@id/linear"
+                app:layout_constraintStart_toEndOf="@id/verticalSeekBarWrapper"
+                app:layout_constraintTop_toTopOf="@id/verticalSeekBarWrapper" />
 
             <LinearLayout
                 android:id="@+id/linear"
@@ -144,12 +143,14 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text"
                 app:layout_constraintVertical_bias="1.0">
+
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/ic_color"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginTop="2dp"
-                    android:layout_gravity="center_horizontal"/>
+                    android:src="@drawable/ic_color" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -159,11 +160,12 @@
                     android:text="تغییر رنگ" />
             </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <ProgressBar
+            android:id="@+id/progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:id="@+id/progress"
-            android:indeterminateTint="@color/blue"/>
+            android:indeterminateTint="@color/blue" />
     </FrameLayout>
 </ScrollView>
