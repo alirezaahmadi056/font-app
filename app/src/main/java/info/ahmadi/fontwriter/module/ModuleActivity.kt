@@ -22,5 +22,4 @@ class ModuleActivity {
 
     @Provides
     fun provideController(activityComponent: Activity):Controller = activityComponent as Controller
-
 }
