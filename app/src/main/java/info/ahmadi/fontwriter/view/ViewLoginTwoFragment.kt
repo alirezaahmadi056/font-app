@@ -2,6 +2,7 @@ package info.ahmadi.fontwriter.view
 
 import android.content.Context
 import android.content.Intent
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
@@ -39,7 +40,7 @@ class ViewLoginTwoFragment @Inject constructor(@ActivityContext context: Context
     @Inject
     lateinit var controller: Controller
 
-    fun onStartUp(){
+    fun onStartUp() {
         binding.title.text = "کد ارسالی به شماره ی ${phone} را وارد نمایید "
     }
 
@@ -90,25 +91,27 @@ class ViewLoginTwoFragment @Inject constructor(@ActivityContext context: Context
             binding.editText4.requestFocus()
             c3 = text.toString()
             userCode = c1 + c2 + c3 + c4 + c5 + c6
-            checkCode(userCode )
+            checkCode(userCode)
         }
         binding.editText4.doOnTextChanged { text, _, _, _ ->
             binding.editText5.requestFocus()
             c4 = text.toString()
             userCode = c1 + c2 + c3 + c4 + c5 + c6
-            checkCode(userCode )
+            checkCode(userCode)
         }
+
+
         binding.editText5.doOnTextChanged { text, _, _, _ ->
             binding.editText6.requestFocus()
             c5 = text.toString()
             userCode = c1 + c2 + c3 + c4 + c5 + c6
-            checkCode(userCode )
+            checkCode(userCode)
 
         }
         binding.editText6.doOnTextChanged { text, _, _, _ ->
             c6 = text.toString()
             userCode = c1 + c2 + c3 + c4 + c5 + c6
-            checkCode(userCode )
+            checkCode(userCode)
         }
     }
 
@@ -120,7 +123,7 @@ class ViewLoginTwoFragment @Inject constructor(@ActivityContext context: Context
 
     fun onResendCode() {
         binding.retry.setOnClickListener {
-            if (binding.retry.text == "ارسال مجدد"){
+            if (binding.retry.text == "ارسال مجدد") {
                 availableCode = true
                 startTimer()
                 resendCode()
@@ -132,26 +135,18 @@ class ViewLoginTwoFragment @Inject constructor(@ActivityContext context: Context
         CoroutineScope(Dispatchers.IO).launch {
             val response = try {
                 api.loginApi(LoginApiRequest(phone)).awaitResponse()
-            }catch (_:Exception){
+            } catch (_: Exception) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    controller.networkError(context, customBinding = {
-                        it.exit.text = "برگشت"
-                    }, retry = {
+                    controller.networkError(context,  retry = {
                         resendCode()
-                    }, exit = {
-                        controller.changeFragment(LoginOneFragment())
                     })
                 }
                 return@launch
             }
             if (response.code() != 200) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    controller.networkError(context, customBinding = {
-                        it.exit.text = "برگشت"
-                    }, retry = {
+                    controller.networkError(context,  retry = {
                         resendCode()
-                    }, exit = {
-                        controller.changeFragment(LoginOneFragment())
                     })
                 }
             }
@@ -162,12 +157,24 @@ class ViewLoginTwoFragment @Inject constructor(@ActivityContext context: Context
         if (userCode.length == 6) {
             if (availableCode) {
                 CoroutineScope(Dispatchers.IO).launch {
-                    val response =
+                    val response = try {
                         api.checkCode(CheckCodeApiRequest(phone, userCode))
                             .awaitResponse()
+                    } catch (_: Exception) {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            controller.networkError(context, customBinding = {
+                                it.exit.text = "بستن"
+                            }, retry = {
+                                checkCode(userCode)
+                            }
+                            )
+                        }
+                        return@launch
+                    }
+
                     if (response.code() == 200) {
-                        val pref = context.getSharedPreferences("font",Context.MODE_PRIVATE)
-                        pref.edit().putBoolean("login",true).apply()
+                        val pref = context.getSharedPreferences("font", Context.MODE_PRIVATE)
+                        pref.edit().putBoolean("login", true).apply()
                         CoroutineScope(Dispatchers.Main).launch {
                             controller.startActivityFromController(
                                 intent = Intent(
@@ -176,7 +183,7 @@ class ViewLoginTwoFragment @Inject constructor(@ActivityContext context: Context
                                 )
                             )
                         }
-                    } else {
+                    } else if (response.code() == 500) {
                         CoroutineScope(Dispatchers.Main).launch {
                             binding.editText1.background =
                                 ContextCompat.getDrawable(context, R.drawable.background_error)
@@ -191,13 +198,15 @@ class ViewLoginTwoFragment @Inject constructor(@ActivityContext context: Context
                             binding.editText6.background =
                                 ContextCompat.getDrawable(context, R.drawable.background_error)
                             binding.error.visibility = View.VISIBLE
-                            controller.networkError(context, customBinding = {
-                                it.exit.text = "بستن"
-                            }, retry = {
-                                checkCode(userCode)
-                            }
-                            )
+
                         }
+                    } else {
+                        controller.networkError(context, customBinding = {
+                            it.exit.text = "بستن"
+                        }, retry = {
+                            checkCode(userCode)
+                        }
+                        )
                     }
                 }
             } else {

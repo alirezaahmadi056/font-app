@@ -53,14 +53,13 @@ class ViewLoginOneFragment @Inject constructor(@ActivityContext context: Context
             val response =
                 try {
                     api.loginApi(LoginApiRequest(binding.phone.text.toString())).awaitResponse()
-                } catch (_: Exception) {
+                } catch (e: Exception) {
                     CoroutineScope(Dispatchers.Main).launch {
                         binding.login.text = "ارسال کد"
                         controller.networkError(context, retry = {
+                            binding.login.text = "منتظر بمانید"
                             requestApi()
-
                         }, exit = {
-                            Log.i("jjj", "requestApi: hello")
                             controller.finishFromController()
                         })
                     }
