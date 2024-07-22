@@ -1,7 +1,5 @@
 package info.ahmadi.fontwriter.presenter
 
-import androidx.fragment.app.FragmentManager
-import info.ahmadi.fontwriter.controller.Controller
 import info.ahmadi.fontwriter.view.ViewHomeActivity
 import javax.inject.Inject
 
@@ -18,5 +16,6 @@ class PresenterHomeActivity @Inject constructor() {
         view.saveText()
         view.onContactClick()
         view.onHelperClick()
+        view.changeFontButtonClick()
     }
 }

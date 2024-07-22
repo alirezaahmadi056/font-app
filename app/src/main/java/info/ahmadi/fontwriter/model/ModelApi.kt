@@ -27,7 +27,9 @@ data class FontApiResponseData(
     @SerializedName("font")
     val font: String,
     @SerializedName("font_name")
-    val fontName: String
+    val fontName: String,
+    @SerializedName("type")
+    val type:String
 )
 
 data class AssetsApiResponse(

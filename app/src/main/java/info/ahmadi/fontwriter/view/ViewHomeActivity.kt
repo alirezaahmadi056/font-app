@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Typeface
 import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.Layout
@@ -20,7 +21,9 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.SeekBar
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -35,6 +38,7 @@ import info.ahmadi.fontwriter.controller.Controller
 import info.ahmadi.fontwriter.customAd.FontAdapter
 import info.ahmadi.fontwriter.databinding.ActivityHomeBinding
 import info.ahmadi.fontwriter.databinding.DialogContactBinding
+import info.ahmadi.fontwriter.model.FontApiResponseData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,6 +68,9 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
     @Inject
     lateinit var fragment: FragmentManager
 
+    private var fontResponseData: ArrayList<FontApiResponseData>? = null
+    private var fontIsEnglish = false
+    private var saveColor = 0xFF000000
     fun saveText() {
         binding.export.setOnClickListener {
             if (binding.text.text.isNotEmpty()) {
@@ -164,7 +171,8 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
                     binding.recycler.adapter = adapter
                     binding.recycler.layoutManager =
                         LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-                    adapter.updateData(response.body()!!.fonts)
+                    fontResponseData = response.body()?.fonts
+                    adapter.updateData(fontResponseData?.toList() ?: listOf())
                 }
             } else {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -178,10 +186,23 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
         }
     }
 
+    fun changeFontButtonClick() {
+        binding.changeFont.setOnClickListener {
+            if (fontIsEnglish) {
+                adapter.updateData(fontResponseData?.filter { it.type == "fa" } ?: arrayListOf())
+            } else {
+                adapter.updateData(fontResponseData?.filter { it.type == "en" } ?: arrayListOf())
+            }
+            fontIsEnglish = !fontIsEnglish
+        }
+    }
+
     fun changeTextColor() {
         binding.changeColor.setOnClickListener {
             ColorPickerDialog()
+                .withColor(saveColor.toInt())
                 .withListener { _, color ->
+                    saveColor = color.toLong()
                     binding.text.setTextColor(color)
                 }
                 .show(fragment, "colorPicker")

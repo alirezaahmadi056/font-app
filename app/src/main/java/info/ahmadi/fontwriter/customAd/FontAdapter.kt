@@ -73,7 +73,7 @@ class FontAdapter @Inject constructor() : RecyclerView.Adapter<FontAdapter.View>
     override fun getItemCount(): Int = items.size
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(newItem: ArrayList<FontApiResponseData>) {
+    fun updateData(newItem: List<FontApiResponseData>) {
         this.items.clear()
         this.items.addAll(newItem)
         notifyDataSetChanged()

@@ -27,79 +27,44 @@ class AssetsAdapter @Inject constructor() : RecyclerView.Adapter<AssetsAdapter.V
     inner class View(private val binding: AdapterAssetsBinding, private val context: Context) :
         RecyclerView.ViewHolder(binding.root) {
         private val kDownloader = KDownloader.create(context)
-        private val dirPathGold = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)!!.path + "/fontwriter/assets"
-        private val dirPathFree = "/storage/emulated/0/Download/fontwriter/assets"
-        private var dirPath = dirPathFree
-        private lateinit var downloadedFile:File
+        private var dirPath = "/storage/emulated/0/Download/fontwriter/assets"
+        private lateinit var downloadedFile: File
 
         fun onCreate(position: Int) {
             Picasso.get().load(items[position].link).into(binding.image)
             binding.placeHolder.setOnClickListener {
                 val fileName = items[position].name
-                if (items[position].isDownload){
-                    dirPath = dirPathFree
-                    val dialogBinding = DialogDownloadBinding.inflate(LayoutInflater.from(context))
-                    val dialog = MaterialAlertDialogBuilder(this.context)
-                        .setView(dialogBinding.root)
-                        .create()
-                    downloadedFile = File(dirPath,fileName)
-                    Picasso.get().load(items[position].link).into(dialogBinding.imageView)
-                    dialogBinding.saveImage.setOnClickListener {
-                        if (this.downloadedFile.exists()) {
-                            Toast.makeText(dialogBinding.root.context, "ذخیره شد", Toast.LENGTH_SHORT).show()
-                            dialog.dismiss()
-                        } else {
-                            this.downloadFile(position,true)
-                        }
-                    }
-                    dialog.show()
-                }else{
-                    dirPath = dirPathGold
-                    downloadedFile = File(dirPath,fileName)
-                    if (downloadedFile.exists()) {
-                        shareFile(downloadedFile)
+                val dialogBinding = DialogDownloadBinding.inflate(LayoutInflater.from(context))
+                val dialog = MaterialAlertDialogBuilder(this.context)
+                    .setView(dialogBinding.root)
+                    .create()
+                downloadedFile = File(dirPath, fileName)
+                Picasso.get().load(items[position].link).into(dialogBinding.imageView)
+                dialogBinding.saveImage.setOnClickListener {
+                    if (this.downloadedFile.exists()) {
+                        Toast.makeText(dialogBinding.root.context, "ذخیره شد", Toast.LENGTH_SHORT)
+                            .show()
+                        dialog.dismiss()
                     } else {
-                        downloadFile(position)
+                        this.downloadFile(position, true)
                     }
                 }
-
-
-
-            }
-        }
-        private fun shareFile(file: File) {
-            val uri = FileProvider.getUriForFile(context, "com.example.yourapp.fileprovider", file)
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.type = "image/*"
-            intent.putExtra(Intent.EXTRA_STREAM, uri)
-            try {
-                context.startActivity(Intent.createChooser(intent,"اشتراک گذاری"))
-            }catch (e:ActivityNotFoundException){
-                Toast.makeText(context, "مشکلی به وجود آمد", Toast.LENGTH_SHORT).show()
+                dialog.show()
             }
         }
 
 
-        private fun downloadFile(position: Int,isDownload:Boolean=false) {
+        private fun downloadFile(position: Int, isDownload: Boolean = false) {
             val url = items[position].link
             val fileName = items[position].name
-
             val req = kDownloader.newRequestBuilder(url, dirPath, fileName)
                 .build()
             kDownloader.enqueue(req, onStart = {}, onCompleted = {
-
-                if (!isDownload){
-                    val downloadedFile = File(dirPath,fileName)
-                    shareFile(downloadedFile)
-                }else{
-                    Toast.makeText(context, "ذخیره شد", Toast.LENGTH_SHORT).show()
-                }
-
+                Toast.makeText(context, "ذخیره شد", Toast.LENGTH_SHORT).show()
             }, onError = {
                 Toast.makeText(context, "مشکل در دریافت فایل", Toast.LENGTH_SHORT).show()
             })
         }
-
 
 
     }

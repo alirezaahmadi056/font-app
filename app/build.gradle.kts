@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.cli.js.klib.shouldGoToNextIcRound
-
 plugins {
     kotlin("kapt")
     alias(libs.plugins.androidApplication)
