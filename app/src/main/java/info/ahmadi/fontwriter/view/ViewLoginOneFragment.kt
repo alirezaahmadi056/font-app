@@ -70,7 +70,6 @@ class ViewLoginOneFragment @Inject constructor(@ActivityContext context: Context
                     controller.changeFragment(LoginTwoFragment())
                     binding.login.text = "ارسال کد"
                 }
-
             } else {
                 CoroutineScope(Dispatchers.Main).launch {
                     binding.login.text = "ارسال کد"

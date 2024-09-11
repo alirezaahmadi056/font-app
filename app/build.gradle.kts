@@ -8,8 +8,8 @@ plugins {
 android {
     namespace = "info.ahmadi.fontwriter"
     compileSdk = 34
-    buildFeatures{
-        viewBinding=true
+    buildFeatures {
+        viewBinding = true
     }
     defaultConfig {
         applicationId = "info.ahmadi.fontwriter"
@@ -20,14 +20,23 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    signingConfigs {
+        create("release"){
+            storeFile=rootProject.file("key.jks")
+            storePassword="kingofkingoffarhad22"
+            keyPassword="kingofkingoffarhad22"
+            keyAlias="fontKey"
+        }
+    }
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig=signingConfigs.getByName("release")
         }
     }
     compileOptions {
