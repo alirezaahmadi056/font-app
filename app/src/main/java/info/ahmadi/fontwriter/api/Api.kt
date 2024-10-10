@@ -25,4 +25,6 @@ interface ApiInterface {
 
     @GET("/api/toturials")
     fun getVideo(): Call<VideoApiResponseData>
+
+
 }

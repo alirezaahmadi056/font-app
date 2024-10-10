@@ -29,7 +29,7 @@ data class FontApiResponseData(
     @SerializedName("font_name")
     val fontName: String,
     @SerializedName("type")
-    val type:String
+    val type: String
 )
 
 data class AssetsApiResponse(
@@ -52,3 +52,4 @@ data class VideoApiResponseData(
     @SerializedName("video")
     val videoLink: String
 )
+
