@@ -18,16 +18,18 @@
         android:layout_gravity="center_horizontal|bottom"
         >
         <ImageView
-            android:layout_width="50dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="50dp"
             android:src="@drawable/ic_instagram"
             android:layout_margin="10dp"
             android:id="@+id/instagram"/>
         <ImageView
-            android:layout_width="50dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="50dp"
             android:layout_margin="10dp"
-            android:src="@drawable/ic_site"
+            android:src="@drawable/ic_telegram"
             android:id="@+id/site"/>
 
     </LinearLayout>

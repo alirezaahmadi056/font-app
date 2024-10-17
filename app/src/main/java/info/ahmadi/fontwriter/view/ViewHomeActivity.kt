@@ -109,21 +109,8 @@ class ViewHomeActivity @Inject constructor(@ActivityContext context: Context) :
             val dialog = MaterialAlertDialogBuilder(context)
                 .setView(dialogBinding.root)
                 .create()
-            dialogBinding.instagram.setOnClickListener {
-                openLink(
-                    "https://instagram.com/Lrn.ir"
-                )
-            }
-            dialogBinding.site.setOnClickListener {
-                openLink("https://alirezaahmadi.info/")
-            }
             dialog.show()
         }
-    }
-
-    private fun openLink(link: String) {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(link))
-        context.startActivity(intent)
     }
 
     private fun saveBitmapToScopedStorage(bitmap: Bitmap) {
