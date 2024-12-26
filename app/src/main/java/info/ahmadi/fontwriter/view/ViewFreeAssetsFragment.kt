@@ -51,9 +51,7 @@ class ViewFreeAssetsFragment @Inject constructor(@ActivityContext context:Contex
                     binding.recycler.adapter = adapter
                     binding.recycler.layoutManager = StaggeredGridLayoutManager(3,
                         StaggeredGridLayoutManager.VERTICAL)
-                    adapter.updateData(response.body()!!.assets.filter {
-                        it.isDownload
-                    })
+                    adapter.updateData(response.body()!!.backgrounds)
                 }
             } else {
                 CoroutineScope(Dispatchers.Main).launch {

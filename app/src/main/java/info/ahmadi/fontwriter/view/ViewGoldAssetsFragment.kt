@@ -51,9 +51,7 @@ class ViewGoldAssetsFragment @Inject constructor(@ActivityContext context: Conte
                     binding.recycler.adapter = adapter
                     binding.recycler.layoutManager = StaggeredGridLayoutManager(3,
                         StaggeredGridLayoutManager.VERTICAL)
-                    adapter.updateData(response.body()!!.assets.filter {
-                        !it.isDownload
-                    })
+                    adapter.updateData(response.body()!!.stickers)
                 }
             } else {
                 CoroutineScope(Dispatchers.Main).launch {

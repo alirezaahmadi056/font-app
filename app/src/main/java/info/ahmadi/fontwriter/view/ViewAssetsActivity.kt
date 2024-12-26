@@ -18,7 +18,7 @@ class ViewAssetsActivity @Inject constructor(@ActivityContext context: Context) 
     lateinit var adapter: ViewPagerAdapter
 
     private val tabText = arrayOf(
-        "ویژه ها",
+        "استیکرها",
         "پس زمینه ها"
     )
     fun onStartUp() {

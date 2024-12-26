@@ -33,8 +33,10 @@ data class FontApiResponseData(
 )
 
 data class AssetsApiResponse(
-    @SerializedName("assets")
-    val assets: ArrayList<AssetsApiResponseData>
+    @SerializedName("stickers")
+    val stickers: ArrayList<AssetsApiResponseData>,
+    @SerializedName("backgrounds")
+    val backgrounds: ArrayList<AssetsApiResponseData>
 )
 
 data class AssetsApiResponseData(
